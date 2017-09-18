@@ -1,0 +1,2 @@
+CREATE DATABASE books_dev;
+CREATE DATABASE books_test;

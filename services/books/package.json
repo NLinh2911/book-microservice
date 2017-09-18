@@ -1,0 +1,40 @@
+{
+  "name": "book-service",
+  "version": "1.0.0",
+  "description": "book service and book db",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp --gulpfile gulpfile.js",
+    "test": "./node_modules/mocha/bin/_mocha 'tests/**/*.spec.js'"
+  },
+  "keywords": [
+    "book",
+    "service",
+    "node",
+    "express"
+  ],
+  "author": "NLinh2911",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "cookie-parser": "^1.4.3",
+    "debug": "^3.0.1",
+    "express": "^4.15.4",
+    "knex": "^0.13.0",
+    "morgan": "^1.8.2",
+    "pg": "^7.3.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "eslint": "^4.7.0",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0",
+    "gulp-nodemon": "^2.2.1",
+    "mocha": "^3.5.3"
+  }
+}
