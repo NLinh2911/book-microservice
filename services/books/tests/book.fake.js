@@ -10,20 +10,11 @@ const server = require('../src/app');
 // const knex = require('../src/db/connection');
 
 describe('books API Routes', () => {
-  // beforeEach(() => {
-  //   return knex.migrate.rollback()
-  //   .then(() => { return knex.migrate.latest(); })
-  //   .then(() => { return knex.seed.run(); });
-  // });
 
-  // afterEach(() => {
-  //   return knex.migrate.rollback();
-  // });
-
-  describe('GET /api/books/ping', () => {
+  describe('GET /api/ping', () => {
     it('should return "pong"', (done) => {
       chai.request(server)
-        .get('/api/books/ping')
+        .get('/api/ping')
         .end((err, res) => {
           console.log(res.text);
           res.type.should.eql('text/html');
@@ -51,7 +42,25 @@ describe('books API Routes', () => {
         });
     });
   });
-
+  describe('GET /api/books/category/all', () => {
+    it('should return all categories', (done) => {
+      chai.request(server)
+        .get('/api/books/category/all')
+        .end((err, res) => {
+          console.log(res.body.data.length);
+          res.should.have.status(200);
+          res.type.should.equal('application/json');
+          res.body.status.should.equal('success');
+          res.body.data.should.be.a('array');
+          res.body.data.length.should.equal(6);
+          res.body.data[0].should.have.property('id');
+          res.body.data[0].should.have.property('name');
+          res.body.data[0].should.have.property('alias');
+          done()
+        });
+    });
+  });
+  
   describe('GET /api/books/:alias', () => {
     it('should return one book by its alias', (done) => {
       chai.request(server)
@@ -114,7 +123,7 @@ describe('books API Routes', () => {
           res.body.status.should.equal('success');
           res.body.data.should.equal('create book ok');
           chai.request(server)
-            .get('/books/new-book-to-add')
+            .get('/api/books/new-book-to-add')
             .end((err, res) => {
               console.log(res.body);
               res.type.should.equal('application/json');

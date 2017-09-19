@@ -5,8 +5,9 @@ const request = require('request-promise');
 // connect to db
 const bookModel = require('../db/fake-model');
 // authentication helper functions
-// const routeHelpers = require('./_fakehelpers');
-const routeHelpers = require('./_helpers');
+const routeHelpers = require('./_fakehelpers');
+// const routeHelpers = require('./_helpers');
+
 // ==== define book service routes ============
 
 /**
@@ -51,7 +52,7 @@ router.get('/books/:alias', (req, res, next) => {
 })
 
 /**
- * Select category
+ * Select all category
  */
 router.get('/books/category/all', (req, res, next) => {
   // receive user_id from users service
@@ -79,30 +80,6 @@ router.get('/books/category/:alias', (req, res, next) => {
   }).catch(err => {
     return next(err);
   })
-})
-
-/**
- * Search book
- */
-
-/**
- * Get a full book detail for its author to modify (need to authenticate)
- */
-router.get('/books/check/:id', routeHelpers.ensureAuthenticated, (req, res, next) => {
-  return bookModel
-    .getBookById(req.params.id)
-    .then(data => {
-      // if (data.author_id != req.user.id) {
-      //   return new Error('not allowed to delete')
-      // }
-      res.status(200).json({
-        status: 'success', 
-        data: data
-      })
-    })
-    .catch(err => {
-      return next(err);
-    })
 })
 
 /**

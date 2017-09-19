@@ -192,6 +192,7 @@ function getCategory() {
     resolve(categoryDB);
   })
 }
+
 module.exports = {
   getAll,
   getBookById,

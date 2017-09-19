@@ -65,4 +65,83 @@ Dự kiến các services và dbs
 
 ## 18/09:
 * Kết nối sang user service lấy author data
-* 
+
+## 19/09: 
+```bash
+.
+├── knexfile.js
+├── package.json
+├── package-lock.json
+├── src
+│   ├── app.js
+│   ├── db
+│   │   ├── book-model.js
+│   │   ├── category-model.js
+│   │   ├── connection.js
+│   │   ├── create.sql
+│   │   ├── fake-model.js
+│   │   ├── migrations
+│   │   └── seeds
+│   ├── routes
+│   │   ├── book.js
+│   │   ├── _fakehelpers.js
+│   │   └── _helpers.js
+│   └── server.js
+└── tests
+    ├── book.fake.js
+    ├── book.spec.js
+    └── index.spec.js
+
+6 directories, 16 files
+
+```
+
+* Folder `src` chứa source codes: 
+  * `app.js` cấu hình và khởi tạo express server
+  * `server.js` chạy server
+  * `routes` chứa các files cấu hình routes và hàm phụ trợ trong xử lý routes
+     * `book.js` khai báo các routes. Router này được gọi lại và sử dụng trong `app.js`
+     ```js
+      const routes = require('./routes/book');
+      app.use('/api', routes);
+      // => 1 route sẽ có dạng 'http://localhost:3000/api/ping'
+     ```
+     * Một số routes là *secure routes* yêu cầu user đăng nhập mới thực thi, ví dụ, phải có log in mới đc tạo sách mới. Những routes này sử dụng 1 hàm kiểm tra `routeHelpers.ensureAuthenticated` 
+     * `_fakehelpers.js` chứa hàm `ensureAuthenticated` giả để kiểm thử local (không cần kết nối với user service)
+     * `_helpers.js` chứa hàm thật gọi sang user service để xác thực
+  * `db` chứa các files cấu hình, khởi tạo và truy xuất CSDL
+    * `fake-model.js` dựng CSDL in memory giả để kiểm thử
+    * CSDL Postgresql gồm các files còn lại. Kết nối sử dụng ORM Knex
+
+### Xây dựng Book Service với CSDL giả in memory 
+
+#### In-memory DB: `fake-model.js`:
+* BookDB và CategoryDB lưu dạng arrays chứa objects
+* Các hàm CRUD ví dụ `getAll`, `getBookByAlias`, `createBook`,...
+
+#### `Routes/book.js`
+
+#### Test Routes: 
+* `tests/book.fake.js` chạy các hàm kiểm thử routes sử dụng CSDL giả `fake-model`
+* Chạy tests:
+```bash
+$ cd tests
+$ mocha book.fake.js
+```
+* Nếu không kết nối với user service trong `routes/book.js` sử dụng `_fakehelpers.js` để xác thực người dùng
+```js
+// ./routes/book.js
+// connect to db
+const bookModel = require('../db/fake-model');
+// authentication helper functions
+const routeHelpers = require('./_fakehelpers');
+```
+* Nếu có user service, mở user service và sử dụng `_helpers.js` để gọi sang user service xác thực
+```js
+// ./routes/book.js
+// connect to db
+const bookModel = require('../db/fake-model');
+// authentication helper functions
+const routeHelpers = require('./_helpers');
+```
+
