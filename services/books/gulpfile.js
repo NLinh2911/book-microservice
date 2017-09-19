@@ -9,7 +9,7 @@ tasks
 gulp.task('start', () => {
   nodemon({
     script: './src/server',
-    ext: 'js html',
+    ext: 'js',
   });
 });
 

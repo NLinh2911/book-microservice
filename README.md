@@ -65,3 +65,4 @@ Dự kiến các services và dbs
 
 ## 18/09:
 * Kết nối sang user service lấy author data
+* 

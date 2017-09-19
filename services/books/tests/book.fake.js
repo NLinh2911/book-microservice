@@ -20,10 +20,10 @@ describe('books API Routes', () => {
   //   return knex.migrate.rollback();
   // });
 
-  describe('GET /books/ping', () => {
+  describe('GET /api/books/ping', () => {
     it('should return "pong"', (done) => {
       chai.request(server)
-        .get('/books/ping')
+        .get('/api/books/ping')
         .end((err, res) => {
           console.log(res.text);
           res.type.should.eql('text/html');
@@ -33,17 +33,17 @@ describe('books API Routes', () => {
     });
   });
 
-  describe('GET /books', () => {
-    it('should return all books', (done) => {
+  describe('GET /api/books', () => {
+    it('should return all published books', (done) => {
       chai.request(server)
-        .get('/books')
+        .get('/api/books')
         .end((err, res) => {
           console.log(res.body.data.length);
           res.should.have.status(200);
           res.type.should.equal('application/json');
           res.body.status.should.equal('success');
           res.body.data.should.be.a('array');
-          res.body.data.length.should.equal(5);
+          res.body.data.length.should.equal(4);
           res.body.data[0].should.have.property('id');
           res.body.data[0].should.have.property('title');
           res.body.data[0].should.have.property('publish_status');
@@ -52,10 +52,10 @@ describe('books API Routes', () => {
     });
   });
 
-  describe('GET /books/:alias', () => {
+  describe('GET /api/books/:alias', () => {
     it('should return one book by its alias', (done) => {
       chai.request(server)
-        .get('/books/a-history-of-the-world-in-objects')
+        .get('/api/books/a-history-of-the-world-in-objects')
         .end((err, res) => {
           console.log(res.status);
           console.log(res.body.data);
@@ -68,17 +68,17 @@ describe('books API Routes', () => {
           res.body.data.should.have.property('title');
           res.body.data.should.have.property('publish_status');
           res.body.data.title.should.equal('A History of the World in 100 Objects');
-          res.body.data.author_id.should.equal('fakeUser');
+          res.body.data.author_id.should.equal(0);
           res.body.data.publish_status.should.equal(true);
           done();
         });
     });
   });
 
-  describe('GET /books/category/:categoryId', () => {
-    it('should return all books by category id', (done) => {
+  describe('GET /api/books/category/:alias', () => {
+    it('should return all books by category alias', (done) => {
       chai.request(server)
-        .get('/books/category/cat03')
+        .get('/api/books/category/history')
         .end((err, res) => {
           console.log(res.body.data.length);
           console.log(res.body.data[0].category_id);
@@ -95,10 +95,10 @@ describe('books API Routes', () => {
     });
   });
 
-  describe('POST /books', () => {
+  describe('POST /api/books', () => {
     it('should create a new book', (done) => {
       chai.request(server)
-        .post('/books')
+        .post('/api/books')
         .set('authorization', `Bearer correctToken`)
         .send({
           title: 'New Book To Add',
@@ -128,10 +128,10 @@ describe('books API Routes', () => {
     });
   });
 
-  describe('PUT /books/:id', () => {
+  describe('PUT /api/books/:id', () => {
     it('should update a book by id', (done) => {
       chai.request(server)
-        .put('/books/d83a15da-ba79-4215-b117-8176bb5ac694')
+        .put('/api/books/d83a15da-ba79-4215-b117-8176bb5ac694')
         .set('authorization', `Bearer correctToken`)
         .send({})
         .end((err, res) => {
@@ -147,10 +147,10 @@ describe('books API Routes', () => {
     });
   });
 
-  describe('DELETE /books/:id', () => {
+  describe('DELETE /api/books/:id', () => {
     it('should delete a book by id', (done) => {
       chai.request(server)
-        .delete('/books/d83a15da-ba79-4215-b117-8176bb5ac694')
+        .delete('/api/books/d83a15da-ba79-4215-b117-8176bb5ac694')
         .set('authorization', `Bearer correctToken`)
         .end((err, res) => {
           console.log(res.body);
@@ -165,10 +165,10 @@ describe('books API Routes', () => {
     });
   });
 
-  describe('PUT /books/:id', () => {
+  describe('PUT /api/books/:id', () => {
     it('should not allowed to update a book', (done) => {
       chai.request(server)
-        .put('/books/d83a15da-ba79-4215-b117-8176bb5ac694')
+        .put('/api/books/d83a15da-ba79-4215-b117-8176bb5ac694')
         .set('authorization', `Bearer incorrectToken`)
         .send({})
         .end((err, res) => {
@@ -183,10 +183,10 @@ describe('books API Routes', () => {
     });
   });
 
-  describe('DELETE /books/:id', () => {
+  describe('DELETE /api/books/:id', () => {
     it('should not allowed to delete a book if not logged in', (done) => {
       chai.request(server)
-        .delete('/books/d83a15da-ba79-4215-b117-8176bb5ac694')
+        .delete('/api/books/d83a15da-ba79-4215-b117-8176bb5ac694')
         .end((err, res) => {
           console.log(res.body);
           console.log(res.status);

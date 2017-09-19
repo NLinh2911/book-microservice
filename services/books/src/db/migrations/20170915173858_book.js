@@ -4,7 +4,7 @@ exports.up = function (knex, Promise) {
     table.string('title').notNullable();
     table.string('alias');
     table.specificType('category_id', 'text[]');
-    table.specificType('author_id', 'text[]');
+    table.string('author_id');
     table.text('description');
     table.string('image');
     table.timestamp('created_at', true).defaultTo(knex.fn.now());

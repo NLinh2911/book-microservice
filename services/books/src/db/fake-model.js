@@ -1,9 +1,9 @@
-const data = [{
+const bookDB = [{
   id: 'd83a15da-ba79-4215-b117-8176bb5ac694',
   title: 'Option B: Facing Adversity, Building Resilience, and Finding Joy',
   alias: 'option-b-facing-adversity-building-resilience-and-finding-joy',
   category_id: ['cat01'],
-  author_id: 'fakeUser',
+  author_id: 0,
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   image: 'placeholder.jpg',
   created_at: '2016-12-16 12:21:13',
@@ -16,7 +16,7 @@ const data = [{
   title: 'A History of the World in 100 Objects',
   alias: 'a-history-of-the-world-in-objects',
   category_id: ['cat03', 'cat04'],
-  author_id: 'fakeUser',
+  author_id: 0,
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   image: 'placeholder.jpg',
   created_at: '2017-01-16 12:21:13',
@@ -29,7 +29,7 @@ const data = [{
   title: 'The Sacred Willow: Four Generations in the Life of a Vietnamese Family',
   alias: 'the-sacred-willow-four-generations-in-the-life-of-a-vietnamese-family',
   category_id: ['cat03', 'cat06'],
-  author_id: 'fakeUser',
+  author_id: 0,
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   image: 'placeholder.jpg',
   created_at: '2017-01-16 12:21:13',
@@ -42,7 +42,7 @@ const data = [{
   title: 'Skinnytaste Fast and Slow: Knockout Quick-Fix and Slow Cooker Recipes',
   alias: 'skinnytaste-fast-and-slow-knockout-quickfix-and-slow-cooker-recipes',
   category_id: ['cat05'],
-  author_id: 'fakeUser',
+  author_id: 0,
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   image: 'placeholder.jpg',
   created_at: '2016-12-16 12:21:13',
@@ -55,7 +55,7 @@ const data = [{
   title: 'Not Yet Published Book',
   alias: 'not-yet-published-book',
   category_id: [],
-  author_id: 'fakeUser',
+  author_id: 0,
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   image: 'placeholder.jpg',
   created_at: '2016-12-16 12:21:13',
@@ -65,7 +65,7 @@ const data = [{
   publish_status: false,
 }];
 
-const category = [{
+const categoryDB = [{
   id: 'cat01',
   name: 'Business & Leadership',
   alias: 'business-leadership',
@@ -76,7 +76,7 @@ const category = [{
 }, {
   id: 'cat03',
   name: 'History',
-  alias: 'History',
+  alias: 'history',
 }, {
   id: 'cat04',
   name: 'Science',
@@ -95,41 +95,53 @@ const category = [{
 
 function getAll() {
   return new Promise((resolve, reject) => {
-    let res = data.filter(book => {
+    let res = bookDB.filter(book => {
       return book.publish_status;
     })
     resolve(res);
   });
 }
 
+function getBookById(id) {
+  return new Promise((resolve, reject) => {
+    const res = bookDB.find((book) => {
+      return book.id == id;
+    });
+    resolve(res);
+  });
+}
+
 function getBookByAlias(alias) {
   return new Promise((resolve, reject) => {
-    const res = data.find((book) => {
+    const res = bookDB.find((book) => {
       return book.alias == alias;
     });
     resolve(res);
   });
 }
 // console.log(getBookByAlias('a-history-of-the-world-in-objects'))
-function getBookByCategory(categoryID) {
+function getBookByCategory(alias) {
   return new Promise((resolve, reject) => {
-    const res = data.filter((book) => {
-      return book.category_id.indexOf(categoryID) != -1;
+    let cate = categoryDB.find(ele => {
+      return ele.alias == alias;
+    })
+    const res = bookDB.filter((book) => {
+      return book.category_id.indexOf(cate.id) != -1;
     });
     resolve(res);
   });
 }
-// console.log(getBookByCategory('cat03'))
+// console.log(getBookByCategory('cat03'));
 function createBook(book) {
   return new Promise((resolve, reject) => {
-    data.push(book);
+    bookDB.push(book);
     resolve('create book ok');
   });
 }
 
 function updateBook(authorID, bookID, updates) {
   return new Promise((resolve, reject) => {
-    const book = data.find((book) => {
+    const book = bookDB.find((book) => {
       return book.id == bookID;
     });
     if (book.author_id != authorID) {
@@ -142,7 +154,7 @@ function updateBook(authorID, bookID, updates) {
 
 function deleteBook(authorID, bookID) {
   return new Promise((resolve, reject) => {
-    const book = data.find((book) => {
+    const book = bookDB.find((book) => {
       return book.id == bookID;
     });
     if (book.author_id != authorID) {
@@ -156,9 +168,9 @@ function deleteBook(authorID, bookID) {
 function getCategoryName(data) {
   return new Promise((resolve, reject) => {
     let newData = data.map(book => {
-      let newBook = book;
+      let newBook = Object.assign({}, book);
       let newCate = newBook.category_id.map(cat => {
-        let catDetail = category.find(ele => {
+        let catDetail = categoryDB.find(ele => {
           return ele.id == cat;
         })
         cat = catDetail.name;
@@ -167,25 +179,27 @@ function getCategoryName(data) {
       newBook.category_id = newCate
       return newBook;
     })
-  resolve(newData);
-})
+    resolve(newData);
+  })
 }
-// getAll().then(data => {
-//   getCategoryName(data).then(res => {
-//     console.log(res);
-//   })
-// })
 
 function getAuthorName(data) {
 
 }
 
+function getCategory() {
+  return new Promise ((resolve, reject) => {
+    resolve(categoryDB);
+  })
+}
 module.exports = {
   getAll,
+  getBookById,
   getBookByAlias,
   getBookByCategory,
   createBook,
   updateBook,
   deleteBook,
   getCategoryName,
+  getCategory,
 };

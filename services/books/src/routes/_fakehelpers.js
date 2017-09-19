@@ -5,7 +5,7 @@ const ensureAuthenticated = (req, res, next) => {
     });
   }
   if (req.headers.authorization.split(' ')[1] === 'correctToken') {
-    req.user = 'fakeUser';
+    req.user_id = 0;
     return next();
   }
   res.status(400).json({
